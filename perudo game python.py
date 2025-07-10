@@ -30,54 +30,54 @@ joueur_actuel = 0
 enchere = None  # Initialisation de la variable enchere
 
 # boucle principale du jeu
-while True : 
-     joueur = joueurs[joueur_actuel]
-     print(f"C'est le tour de {joueur['nom']}")
+while True: 
+    joueur = joueurs[joueur_actuel]
+    print(f"C'est le tour de {joueur['nom']}")
 
-if enchere is None:
-    # la première enchère d'un joueur
-    nb = int(input("Entrez le nombre de dés pour la première enchère : "))
-    valeur = int(input("Entrez la valeur du dé pour la première enchère (1-6) : "))
-    enchere = (nb, valeur)
-else:
-    print(f"l'enchère actuelle est : {enchere[0]} dés de valeur {enchere[1]}")
-    while True:
-        nb = int(input("Entrez le nombre de dés pour la nouvelle enchère : "))
-        valeur = int(input("Entrez la valeur du dé pour la nouvelle enchère (1-6) : "))
-        if nb < enchere[0] or (nb == enchere[0] and valeur <= enchere[1]): # verification de l'enchere est valide est sup a 0
-            print("Enchère invalide, elle doit être supérieure à l'enchère précédente.")
-            continue
+    if enchere is None:
+        # la première enchère d'un joueur
+        nb = int(input("Entrez le nombre de dés pour la première enchère : "))
+        valeur = int(input("Entrez la valeur du dé pour la première enchère (1-6) : "))
         enchere = (nb, valeur)
-        break #fin de la boucle enchere
-    
-    action = input("Voulez-vous enchérir (e) ou douter (d) ? ").lower() # on dmd au joueur sil bluff ou il enchere
-    if action == "d":
-        # verif l'enchère
-        nb_reels = compter_occurrences(joueurs, enchere[1])
-        print(f"Il y a en réalité {nb_reels} dés de valeur {enchere[1]} sur la table.")
-        if nb_reels >= enchere[0]:
-            # Le joueur qui doute perd un dé
-            print(f"{joueur['nom']} a perdu un dé.")
-            if joueur["des"]:
-                joueur["des"].pop()
-        else:
-            # Le joueur précédent perd un dé
-            joueur_prec = joueurs[(joueur_actuel - 1) % len(joueurs)]
-            print(f"{joueur_prec['nom']} a perdu un dé.")
-            if joueur_prec["des"]:
-                joueur_prec["des"].pop() # on retire un de au joueur d'avt 
-        #  recommencer un tour
-        lancer_des(joueurs)
-        enchere = None
     else:
+        print(f"l'enchère actuelle est : {enchere[0]} dés de valeur {enchere[1]}")
         while True:
             nb = int(input("Entrez le nombre de dés pour la nouvelle enchère : "))
             valeur = int(input("Entrez la valeur du dé pour la nouvelle enchère (1-6) : "))
-            if nb < enchere[0] or (nb == enchere[0] and valeur <= enchere[1]):
+            if nb < enchere[0] or (nb == enchere[0] and valeur <= enchere[1]): # verification de l'enchere est valide est sup a 0
                 print("Enchère invalide, elle doit être supérieure à l'enchère précédente.")
                 continue
             enchere = (nb, valeur)
-            break
+            break #fin de la boucle enchere
+        
+        action = input("Voulez-vous enchérir (e) ou douter (d) ? ").lower() # on dmd au joueur sil bluff ou il enchere
+        if action == "d":
+            # verif l'enchère
+            nb_reels = compter_occurrences(joueurs, enchere[1])
+            print(f"Il y a en réalité {nb_reels} dés de valeur {enchere[1]} sur la table.")
+            if nb_reels >= enchere[0]:
+                # Le joueur qui doute perd un dé
+                print(f"{joueur['nom']} a perdu un dé.")
+                if joueur["des"]:
+                    joueur["des"].pop()
+            else:
+                # Le joueur précédent perd un dé
+                joueur_prec = joueurs[(joueur_actuel - 1) % len(joueurs)]
+                print(f"{joueur_prec['nom']} a perdu un dé.")
+                if joueur_prec["des"]:
+                    joueur_prec["des"].pop() # on retire un de au joueur d'avt 
+            #  recommencer un tour
+            lancer_des(joueurs)
+            enchere = None
+        else:
+            while True:
+                nb = int(input("Entrez le nombre de dés pour la nouvelle enchère : "))
+                valeur = int(input("Entrez la valeur du dé pour la nouvelle enchère (1-6) : "))
+                if nb < enchere[0] or (nb == enchere[0] and valeur <= enchere[1]):
+                    print("Enchère invalide, elle doit être supérieure à l'enchère précédente.")
+                    continue
+                enchere = (nb, valeur)
+                break
 
     # le tour est au joueur suivant
     joueur_actuel = (joueur_actuel + 1) % len(joueurs)
@@ -86,4 +86,7 @@ else:
     joueurs = [j for j in joueurs if len(j["des"]) > 0]
     if len(joueurs) == 1:
         print(f"{joueurs[0]['nom']} a gagné la partie !")
-      break # fin boucle du jeu
+        break # fin boucle du jeu
+
+print("Merci d'avoir joué au Perudo !") # message fin du jeu 
+
